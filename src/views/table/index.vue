@@ -7,35 +7,30 @@
       border
       fit
       highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="序号" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.$index+1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="账号" width="150" align="center">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          <span>{{ scope.row.account }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="用户" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          {{ scope.row.desc }}
         </template>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
+      <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status | statusTextFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column align="center" prop="created_at" label="过期时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.expire_in }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -49,9 +44,15 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        1: 'success',
+        0: 'danger'
+      }
+      return statusMap[status]
+    },
+    statusTextFilter(status) {
+      const statusMap = {
+        1: '正常',
+        0: '禁用'
       }
       return statusMap[status]
     }
@@ -69,7 +70,7 @@ export default {
     fetchData() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
-        this.list = response.data.items
+        this.list = response.data.list
         this.listLoading = false
       })
     }

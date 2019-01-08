@@ -4,6 +4,7 @@ import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
 import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth' // 验权
+// import Layout from './views/layout/Layout'
 
 const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
@@ -15,6 +16,24 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
+          // const items = []
+          // for (const role of res.data.roles) {
+          //   var item = {
+          //     path: role.url,
+          //     component: Layout,
+          //     children: [
+          //       {
+          //         path: '',
+          //         name: role.code,
+          //         component: () => import('@/views/' + role.component),
+          //         meta: { title: role.name, icon: 'form' }
+          //       }
+          //     ]
+          //   }
+          //   items.push(item)
+          // }
+          // router.addRoutes(items)
+          // next({ ...to, replace: true })
           next()
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
